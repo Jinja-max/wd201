@@ -1,5 +1,5 @@
 const hello = () => {
-  console.log("yeshwanth's first node project code");
+  console.log("yeshwanth's first node projeckt code");
 };
 
 hello();
