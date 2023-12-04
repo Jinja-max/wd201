@@ -1,5 +1,5 @@
 const hello = () => {
-  console.log("yeshwanth's first node projeckt code");
+  console.log("Hello GitHub!");
 };
 
 hello();
