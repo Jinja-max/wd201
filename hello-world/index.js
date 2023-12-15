@@ -1,5 +1,1 @@
-const hello = () => {
-  console.log("Hello GitHub!");
-};
-
-hello();
+import { ESLint } from "eslint";
