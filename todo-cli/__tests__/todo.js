@@ -49,15 +49,26 @@ describe("todo-cli test suite", () => {
   });
   test("creating a new todo", () => {
     let len = all.length;
+    let oldAll = [...all];
+
     add({
       title: "prepare uml",
       dueDate: yesterday,
       completed: false,
     });
+
     expect(all.length).toBe(len + 1);
     expect(all[len].title).toBe("prepare uml");
     expect(all[len].dueDate).toBe(yesterday);
     expect(all[len].completed).toBe(false);
+
+    oldAll.push({
+      title: "prepare uml",
+      dueDate: yesterday,
+      completed: false,
+    });
+
+    expect(oldAll).toEqual(all);
   });
 
   test("marking a todo as complete", () => {
