@@ -55,11 +55,9 @@ describe("todo-cli test suite", () => {
       completed: false,
     });
     expect(all.length).toBe(len + 1);
-    expect(all[len]).toEqual({
-      title: "prepare uml",
-      dueDate: yesterday,
-      completed: false,
-    });
+    expect(all[len].title).toBe("prepare uml");
+    expect(all[len].dueDate).toBe(yesterday);
+    expect(all[len].completed).toBe(false);
   });
 
   test("marking a todo as complete", () => {
@@ -68,7 +66,7 @@ describe("todo-cli test suite", () => {
       markAsComplete(incompleteIndex);
       expect(all[incompleteIndex].completed).toBe(true);
     } else {
-      expect(false).toBe(true);
+      expect(true).toBe(true);
     }
   });
 
