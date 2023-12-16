@@ -55,7 +55,7 @@ describe("todo-cli test suite", () => {
       completed: false,
     });
     expect(all.length).toBe(len + 1);
-    expect(all[all.length - 1]).toEqual({
+    expect(all[len]).toEqual({
       title: "prepare uml",
       dueDate: yesterday,
       completed: false,
@@ -63,9 +63,13 @@ describe("todo-cli test suite", () => {
   });
 
   test("marking a todo as complete", () => {
-    markAsComplete(0);
-    expect(all[0].completed).toBe(true);
-    // expect(all[0].title).toBe("Submit assignment");
+    const incompleteIndex = all.findIndex((task) => !task.completed);
+    if (incompleteIndex !== -1) {
+      markAsComplete(incompleteIndex);
+      expect(all[incompleteIndex].completed).toBe(true);
+    } else {
+      expect(false).toBe(true);
+    }
   });
 
   test("overdue retrieval", () => {
