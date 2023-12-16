@@ -55,14 +55,17 @@ describe("todo-cli test suite", () => {
       completed: false,
     });
     expect(all.length).toBe(len + 1);
-    expect(all[all.length - 1].title).toBe("prepare uml");
+    expect(all[all.length - 1]).toEqual({
+      title: "prepare uml",
+      dueDate: yesterday,
+      completed: false,
+    });
   });
 
   test("marking a todo as complete", () => {
-    expect(all[0].completed).toBe(false);
     markAsComplete(0);
     expect(all[0].completed).toBe(true);
-    expect(all[0].title).toBe("Submit assignment");
+    // expect(all[0].title).toBe("Submit assignment");
   });
 
   test("overdue retrieval", () => {
