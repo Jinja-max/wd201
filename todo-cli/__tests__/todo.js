@@ -77,7 +77,14 @@ describe("todo-cli test suite", () => {
       markAsComplete(incompleteIndex);
       expect(all[incompleteIndex].completed).toBe(true);
     } else {
-      expect(true).toBe(true);
+      add({
+        title: "this task added when no other incomplete tasks are found",
+        dueDate: tomorrow,
+        completed: false,
+      });
+      markAsComplete(all.length - 1);
+      expect(all[all.length - 1].completed).toBe(true);
+      expect(false).toBe(true);
     }
   });
 
@@ -86,7 +93,7 @@ describe("todo-cli test suite", () => {
     if (overdueTasks.length > 0) {
       expect(overdueTasks[0].dueDate < today).toBe(true);
     } else {
-      expect(true).toBe(true);
+      expect(false).toBe(true);
     }
   });
   test("dueToday retrieval", () => {
@@ -94,7 +101,16 @@ describe("todo-cli test suite", () => {
     if (dueTodayTasks.length > 0) {
       expect(dueTodayTasks[0].dueDate === today).toBe(true);
     } else {
-      expect(true).toBe(true);
+      add({
+        title: "this task added when no other dueToday tasks are found",
+        dueDate: today,
+        completed: false,
+      });
+      dueTodayTasks = dueToday();
+      expect(dueTodayTasks[0].dueDate === today).toBe(true);
+      expect(dueTodayTasks[0].title).toBe(
+        "this task added when no other dueToday tasks are found",
+      );
     }
   });
 
@@ -103,7 +119,16 @@ describe("todo-cli test suite", () => {
     if (dueLaterTasks.length > 0) {
       expect(dueLaterTasks[0].dueDate > today).toBe(true);
     } else {
-      expect(true).toBe(true);
+      add({
+        title: "this task added when no other dueLater tasks are found",
+        dueDate: tomorrow,
+        completed: false,
+      });
+      dueLaterTasks = dueLater();
+      expect(dueLaterTasks[0].dueDate > today).toBe(true);
+      expect(dueLaterTasks[0].title).toBe(
+        "this task added when no other dueLater tasks are found",
+      );
     }
   });
 });
