@@ -51,7 +51,6 @@ module.exports = (sequelize, DataTypes) => {
             dueDate: {
               $lt: today,
             },
-            completed: false,
           },
         });
         return overdueItems;
@@ -83,7 +82,6 @@ module.exports = (sequelize, DataTypes) => {
             dueDate: {
               $gt: today,
             },
-            completed: false,
           },
         });
         return dueLaterItems;
@@ -107,8 +105,14 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     displayableString() {
-      let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
+      const today = new Date().toISOString().split("T")[0];
+      if (this.dueDate === today) {
+        let checkbox = this.completed ? "[x]" : "[ ]";
+        return `${this.id}. ${checkbox} ${this.title}`;
+      } else {
+        let checkbox = this.completed ? "[x]" : "[ ]";
+        return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
+      }
     }
   }
   Todo.init(
