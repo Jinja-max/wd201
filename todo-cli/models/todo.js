@@ -1,13 +1,11 @@
-// models/todo.js
+/* eslint-disable no-unused-vars */
 "use strict";
 const { Model } = require("sequelize");
+const { Sequelize } = require("sequelize");
+const { Op } = Sequelize;
+
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static async addTask(params) {
       return await Todo.create(params);
     }
@@ -15,79 +13,46 @@ module.exports = (sequelize, DataTypes) => {
       console.log("My Todo list \n");
 
       console.log("Overdue");
-      // FILL IN HERE
-      const overdueTasks = await Todo.overdue();
-      const overdueTasksString = overdueTasks
-        .map((task) => task.displayableString())
-        .join("\n");
-      console.log(overdueTasksString);
-      console.log("\n");
+      const overdueItems = await Todo.overdue();
+      overdueItems.forEach((item) => console.log(item.displayableString()));
+      console.log();
 
       console.log("Due Today");
-      // FILL IN HERE
-      const dueTodayTasks = await Todo.dueToday();
-      const dueTodayTasksString = dueTodayTasks
-        .map((task) => task.displayableString())
-        .join("\n");
-      console.log(dueTodayTasksString);
-
-      console.log("\n");
+      const dueTodayItems = await Todo.dueToday();
+      dueTodayItems.forEach((item) => console.log(item.displayableString()));
+      console.log();
 
       console.log("Due Later");
-      // FILL IN HERE
-      const dueLaterTasks = await Todo.dueLater();
-      const dueLaterTasksString = dueLaterTasks
-        .map((task) => task.displayableString())
-        .join("\n");
-      console.log(dueLaterTasksString);
+      const dueLaterItems = await Todo.dueLater();
+      dueLaterItems.forEach((item) => console.log(item.displayableString()));
     }
 
     static async overdue() {
-      // FILL IN HERE TO RETURN OVERDUE ITEMS
-      const today = new Date().toISOString().split("T")[0];
-      try {
-        const overdueItems = await Todo.findAll({
-          where: {
-            dueDate: {
-              $lt: today,
-            },
+      return await Todo.findAll({
+        where: {
+          dueDate: {
+            [Op.lt]: new Date(),
           },
-        });
-        return overdueItems;
-      } catch (error) {
-        console.error(error);
-        return [];
-      }
+        },
+      });
     }
 
     static async dueToday() {
-      // FILL IN HERE TO RETURN ITEMS DUE tODAY
-      const today = new Date().toISOString().split("T")[0];
-      try {
-        const dueTodayItems = await Todo.findAll({
-          where: { dueDate: today },
-        });
-        return dueTodayItems;
-      } catch (error) {
-        console.log(error);
-      }
+      return await Todo.findAll({
+        where: {
+          dueDate: new Date(),
+        },
+      });
     }
 
     static async dueLater() {
-      // FILL IN HERE TO RETURN ITEMS DUE LATER
-      const today = new Date().toISOString().split("T")[0];
-      try {
-        const dueLaterItems = await Todo.findAll({
-          where: {
-            dueDate: {
-              $gt: today,
-            },
+      return await Todo.findAll({
+        where: {
+          dueDate: {
+            [Op.gt]: new Date(),
           },
-        });
-        return dueLaterItems;
-      } catch (error) {
-        console.error(error);
-      }
+        },
+      });
     }
 
     static async markAsComplete(id) {
@@ -105,14 +70,12 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     displayableString() {
-      const today = new Date().toISOString().split("T")[0];
-      if (this.dueDate === today) {
-        let checkbox = this.completed ? "[x]" : "[ ]";
+      let checkbox = this.completed ? "[x]" : "[ ]";
+
+      if (this.dueDate === new Date().toLocaleDateString("en-CA")) {
         return `${this.id}. ${checkbox} ${this.title}`;
-      } else {
-        let checkbox = this.completed ? "[x]" : "[ ]";
-        return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
       }
+      return `${this.id}. ${checkbox} ${this.title} ${this.dueDate}`;
     }
   }
   Todo.init(
